@@ -70,10 +70,10 @@ def fd3(u, t, U0, w, nu, N, H, n):
         new_v.append(new_v[0])
         return np.array(new_v)
     new_v = v()
-    new_u = [-U0*w*np.sin(w*(1-t)) if t>0 else 0]
+    new_u = [-U0*w*np.sin(w*(t-0.01)) if t>0 else 0]
     for i in range(1, N-1):
         new_u.append(nu*(new_v[i]*(u[i+1]-2*u[i]+u[i-1])/h**2 + ((new_v[i+1]-new_v[i])/h)*(u[i+1]-u[i])/h))
-    new_u.append(-U0*w*np.sin(w*(1-t)) if t>0 else 0)
+    new_u.append(-U0*w*np.sin(w*(t-0.01)) if t>0 else 0)
     return np.array(new_u)
 
 
@@ -81,30 +81,29 @@ nu = 1
 H = 1
 N = 200
 w = 1
-t_array = np.arange(0, 1, 0.1)
+t_array = np.linspace(0, 3, num=300)
 y_array = np.linspace(0, H, num=N)
 init_s = a_sol(y_array, 0, U0, w, nu, H)
-#pow_sol 
-output = odeint(fd3, init_s, t_array, args=(U0, w, nu, N, H, 1.1)) #works fine with n=1. Any other value of n, though...
-print(output)
-#newt_sol = np.array([a_sol(y_array, t, U0, w, nu, H) for t in t_array])
+pow_sol = odeint(fd3, init_s, t_array, args=(U0, w, nu, N, H, 1.5)) #works fine with n=1. Any other value of n, though...
+#print(output)
+newt_sol = np.array([a_sol(y_array, t, U0, w, nu, H) for t in t_array])
 
-#fig, (newt_ax, pow_ax) = plt.subplots(1, 2)
-#newt_ax.set_xlabel('u, velocity of fluid')
-#newt_ax.set_ylabel('y')
-#newt_ax.plot(newt_sol[0], y_array, label='t=0')
-#newt_ax.plot(newt_sol[1], y_array, label='t=1')
-#newt_ax.plot(newt_sol[2], y_array, label='t=2')
-#newt_ax.plot(newt_sol[3], y_array, label='t=3')
+fig, (newt_ax, pow_ax) = plt.subplots(1, 2)
+newt_ax.set_xlabel('u, velocity of fluid')
+newt_ax.set_ylabel('y')
+newt_ax.plot(newt_sol[0], y_array, label='t=0')
+newt_ax.plot(newt_sol[99], y_array, label='t=1')
+newt_ax.plot(newt_sol[199], y_array, label='t=2')
+newt_ax.plot(newt_sol[299], y_array, label='t=3')
 
-#pow_ax.set_xlabel('u, velocity of fluid')
-#pow_ax.set_ylabel('y')
-#pow_ax.plot(pow_sol[0], y_array, label='t=0')
-#pow_ax.plot(pow_sol[1], y_array, label='t=1')
-#pow_ax.plot(pow_sol[2], y_array, label='t=2')
-#pow_ax.plot(pow_sol[3], y_array, label='t=3')
-#plt.show()
-
-sol1 = fd3(output[1,:], t_array[1], U0, w, nu, N, H, 1.5)
-plt.plot(y_array, sol1)
+pow_ax.set_xlabel('u, velocity of fluid')
+pow_ax.set_ylabel('y')
+pow_ax.plot(pow_sol[0], y_array, label='t=0')
+pow_ax.plot(pow_sol[99], y_array, label='t=1')
+pow_ax.plot(pow_sol[199], y_array, label='t=2')
+pow_ax.plot(pow_sol[299], y_array, label='t=3')
 plt.show()
+
+#sol1 = fd3(output[2,:], t_array[2], U0, w, nu, N, H, 1.5)
+#plt.plot(y_array, sol1)
+#plt.show()
