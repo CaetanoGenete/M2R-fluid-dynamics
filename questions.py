@@ -61,7 +61,7 @@ t_array = np.linspace(0, 5)
 
 
 
-def fd3(u, t, U0, w, nu, N, H, n):
+def fd3(u, t, U0, w, nu, N, H, n, dt):
     h = H/N
     def v():
         new_v = []
@@ -70,10 +70,10 @@ def fd3(u, t, U0, w, nu, N, H, n):
         new_v.append(new_v[0])
         return np.array(new_v)
     new_v = v()
-    new_u = [-U0*w*np.sin(w*(t-0.01)) if t>0 else 0]
+    new_u = [-U0*w*np.sin(w*(t-dt)) if t>0 else 0]
     for i in range(1, N-1):
         new_u.append(nu*(new_v[i]*(u[i+1]-2*u[i]+u[i-1])/h**2 + ((new_v[i+1]-new_v[i])/h)*(u[i+1]-u[i])/h))
-    new_u.append(-U0*w*np.sin(w*(t-0.01)) if t>0 else 0)
+    new_u.append(-U0*w*np.sin(w*(t-dt)) if t>0 else 0)
     return np.array(new_u)
 
 
@@ -82,9 +82,10 @@ H = 1
 N = 200
 w = 1
 t_array = np.linspace(0, 3, num=300)
+dt = t_array[1] - t_array[0]
 y_array = np.linspace(0, H, num=N)
 init_s = a_sol(y_array, 0, U0, w, nu, H)
-pow_sol = odeint(fd3, init_s, t_array, args=(U0, w, nu, N, H, 1.5)) #works fine with n=1. Any other value of n, though...
+pow_sol = odeint(fd3, init_s, t_array, args=(U0, w, nu, N, H, 1.5, dt)) #works fine with n=1. Any other value of n, though...
 #print(output)
 newt_sol = np.array([a_sol(y_array, t, U0, w, nu, H) for t in t_array])
 
