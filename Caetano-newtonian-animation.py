@@ -43,5 +43,3 @@ ani = animation.FuncAnimation(
     fig, animate, interval=20, blit=True, save_count=50)
 
 plt.show()
-
-sol = odeint(differential, init_y, args = ())
