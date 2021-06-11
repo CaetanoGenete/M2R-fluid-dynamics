@@ -38,7 +38,7 @@ def old_b_sol(y, t, U0, w, eta, rho, tau, G, H):
     nu = eta/rho
     a1 = tau/(1 + (w**2)*(tau**2))
     a2 = w*(tau**2)/(1+(w**2)*(tau**2))
-    b =1j*rho*w/(rho*nu + G*(a1 + 1j*a2))
+    b =1j*rho*w/(rho*nu + G*(a1 - 1j*a2))
     E = np.exp(H*np.sqrt(b))
     return U0*np.real(((1-E**-1)*np.exp(w*t*1j + y*np.sqrt(b)) + (E -1)*np.exp(w*t*1j -y*np.sqrt(b)))/(E - E**-1))
 
